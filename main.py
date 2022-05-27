@@ -38,9 +38,9 @@ class ExampleApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             for i, row in enumerate(sheet.rows):
                 if i == 0:
                     continue
-                if row[0].value is not None and row[int(self.column_comm)].value is not None and row[7].value != 0 and \
+                if row[0].value is not None and row[int(self.column_comm)].value is not None and row[int(self.column_error)].value != 0 and \
                         row[0].value.date() >= self.from_date and row[0].value.date() <= self.to_date:
-                    result_list.append([row[0].value, row[12].value])
+                    result_list.append([row[0].value, row[int(self.column_comm)].value])
 
             workbook = Workbook()
             current_time = str(datetime.datetime.now()).replace(' ', '_').replace(':', '_').replace('.', '_')
