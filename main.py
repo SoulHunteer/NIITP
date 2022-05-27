@@ -44,13 +44,13 @@ class ExampleApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
             workbook = Workbook()
             current_time = str(datetime.datetime.now()).replace(' ', '_').replace(':', '_').replace('.', '_')
-            name = current_time + '_' + 'отчёт_об_ошибках.xlsx'
-            workbook.save(current_time + '_' + 'отчёт_об_ошибках.xlsx')
-            new_book = load_workbook(current_time + '_' + 'отчёт_об_ошибках.xlsx')
+            name = current_time + '_' + 'отчёт_об_ошибках_' + self.book + '.xlsx'
+            workbook.save(current_time + '_' + 'отчёт_об_ошибках_' + self.book + '.xlsx')
+            new_book = load_workbook(current_time + '_' + 'отчёт_об_ошибках_' + self.book + '.xlsx')
             new_sheet = new_book.active
             for row in result_list:
                 new_sheet.append(row)
-            new_book.save(current_time + '_' + 'отчёт_об_ошибках.xlsx')
+            new_book.save(current_time + '_' + 'отчёт_об_ошибках_' + self.book + '.xlsx')
             QMessageBox.about(self, "Успешно", f"Файл {name} сформирован успешно!")
         except Exception as e:
             QMessageBox.about(self, "Ошибка!", e.__str__())
