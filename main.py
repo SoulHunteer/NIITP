@@ -1,5 +1,7 @@
-import sys  # sys нужен для передачи argv в QApplication
+import sys
 from PyQt5 import QtWidgets
+from PyQt5.QtGui import QPixmap
+
 import mainwindow
 from openpyxl import load_workbook, Workbook
 import datetime
@@ -9,11 +11,12 @@ from PyQt5.QtCore import *
 
 
 class ExampleApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
-    # В КОДЕ НИЖЕ УКАЗЫВАЮТСЯ ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ, КОТОРЫЕ ПРИ ЖЕЛАНИИ МОЖНО ИЗМЕНИТЬ, КОММЕНТЫ Я ОСТАВИЛ
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.action)
+        self.pushButton_2.clicked.connect(self.getfile)
+        # В КОДЕ НИЖЕ УКАЗЫВАЮТСЯ ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ, КОТОРЫЕ ПРИ ЖЕЛАНИИ МОЖНО ИЗМЕНИТЬ, КОММЕНТЫ Я ОСТАВИЛ
         self.lineEdit.setText(
             r'C:\Users\Sergey\PycharmProjects\NIITP\Электронный_журнал_статистики_ЕТРИС_ДЗЗ_2022.xlsx')  # Здесь выбирается дефолтный файл Excel
         self.lineEdit_2.setText(r'НКПОР-Р-В (Восточный)')  # Здесь выбирается дефолтный лист Excel
@@ -23,9 +26,16 @@ class ExampleApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.spinBox.setValue(7)  # Тут выставляется значение по умолчанию для колонки с ошибками
         self.spinBox_2.setValue(12)  # Тут выставляется значение по умолчанию для колонки с комментариями
 
-    def action(self, path):
+    def getfile(self):
+        fname = QFileDialog.getOpenFileName(self, 'Open file',
+                                            'c:\\', "Excel files (*.xls *.xlsx)")
+
+        self.path_file = fname[0]
+
+    def action(self):
         self.book = self.lineEdit_2.text()
-        self.path = self.lineEdit.text()
+        if len(self.path_file) == 0:
+            self.path = self.lineEdit.text()
         self.from_date = self.dateEdit.date().toPyDate()
         self.to_date = self.dateEdit_2.date().toPyDate()
         self.column_error = self.spinBox.text()
@@ -38,7 +48,8 @@ class ExampleApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             for i, row in enumerate(sheet.rows):
                 if i == 0:
                     continue
-                if row[0].value is not None and row[int(self.column_comm)].value is not None and row[int(self.column_error)].value != 0 and \
+                if row[0].value is not None and row[int(self.column_comm)].value is not None and row[
+                    int(self.column_error)].value != 0 and \
                         row[0].value.date() >= self.from_date and row[0].value.date() <= self.to_date:
                     result_list.append([row[0].value, row[int(self.column_comm)].value])
 
